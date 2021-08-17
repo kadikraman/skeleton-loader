@@ -33,9 +33,9 @@ export default function App() {
             <Text style={styles.whiteText}>Simple square loader</Text>
           </Pressable>
           <Pressable
-            onPress={() => toggleLoading('item-list')}
-            style={[styles.button, styles.orange]}>
-            <Text style={styles.whiteText}>Item list loader</Text>
+            onPress={() => toggleLoading('grey-item-list')}
+            style={[styles.button, styles.grey]}>
+            <Text>Grey item list loader</Text>
           </Pressable>
           <Pressable
             onPress={() => toggleLoading('pink-item-list')}
@@ -63,7 +63,7 @@ export default function App() {
     );
   }
 
-  if (currentLoader === 'item-list') {
+  if (currentLoader === 'grey-item-list') {
     return <ItemListLoader />;
   }
 
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   pink: { backgroundColor: '#F4DBD8' },
   orange: { backgroundColor: '#EF946C' },
   purple: { backgroundColor: '#8D91C7' },
+  grey: { backgroundColor: '#efefee' },
   whiteText: { color: '#fff' },
 });
 
