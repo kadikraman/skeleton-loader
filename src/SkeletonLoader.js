@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import Reanimated, {
@@ -14,22 +10,28 @@ import Reanimated, {
   interpolate,
 } from 'react-native-reanimated';
 
-const SPEED = 1800;
+const SPEED = 800;
 const BACKGROUND_COLOR = '#efefee';
 const HIGHLIGHT_COLOR = '#fff';
 
-export const SkeletonLoader= ({ children }) => {
+export const SkeletonLoader = ({ children }) => {
   const [layout, setLayout] = React.useState();
   const shared = useSharedValue(0);
-  const { width } = useWindowDimensions();
 
   React.useEffect(() => {
     shared.value = withRepeat(withTiming(1, { duration: SPEED }), Infinity);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [
-      { translateX: interpolate(shared.value, [0, 1], [-width, width]) },
+      {
+        translateX: interpolate(
+          shared.value,
+          [0, 1],
+          [layout ? -layout.width : 0, layout ? layout.width : 0],
+        ),
+      },
     ],
   }));
 
@@ -45,13 +47,7 @@ export const SkeletonLoader= ({ children }) => {
     <MaskedView
       style={{ height: layout.height, width: layout.width }}
       maskElement={<View>{children}</View>}>
-      <View
-        style={{
-          flexGrow: 1,
-          backgroundColor: BACKGROUND_COLOR,
-          overflow: 'hidden',
-        }}
-      />
+      <View style={styles.background} />
       <Reanimated.View style={[animatedStyles, StyleSheet.absoluteFill]}>
         <MaskedView
           style={StyleSheet.absoluteFill}
@@ -76,12 +72,15 @@ export const SkeletonLoader= ({ children }) => {
 };
 
 export const Loader = ({ style }) => {
-  return (
-    <View
-      style={[
-        style ? style : { width: 100, height: 100 },
-        { backgroundColor: '#fff' },
-      ]}
-    />
-  );
+  return <View style={[style ? style : styles.loaderSize, styles.loader]} />;
 };
+
+const styles = StyleSheet.create({
+  loader: { backgroundColor: '#fff' },
+  loaderSize: { width: 100, height: 100 },
+  background: {
+    flexGrow: 1,
+    backgroundColor: BACKGROUND_COLOR,
+    overflow: 'hidden',
+  },
+});
