@@ -14,7 +14,11 @@ const SPEED = 800;
 const BACKGROUND_COLOR = '#efefee';
 const HIGHLIGHT_COLOR = '#fff';
 
-export const SkeletonLoader = ({ children }) => {
+export const SkeletonLoader = ({
+  children,
+  backgroundColor,
+  highlightColor,
+}) => {
   const [layout, setLayout] = React.useState();
   const shared = useSharedValue(0);
 
@@ -47,7 +51,12 @@ export const SkeletonLoader = ({ children }) => {
     <MaskedView
       style={{ height: layout.height, width: layout.width }}
       maskElement={<View>{children}</View>}>
-      <View style={styles.background} />
+      <View
+        style={[
+          styles.background,
+          { backgroundColor: backgroundColor || BACKGROUND_COLOR },
+        ]}
+      />
       <Reanimated.View style={[animatedStyles, StyleSheet.absoluteFill]}>
         <MaskedView
           style={StyleSheet.absoluteFill}
@@ -62,7 +71,7 @@ export const SkeletonLoader = ({ children }) => {
           <View
             style={[
               StyleSheet.absoluteFill,
-              { backgroundColor: HIGHLIGHT_COLOR },
+              { backgroundColor: highlightColor || HIGHLIGHT_COLOR },
             ]}
           />
         </MaskedView>
@@ -80,7 +89,6 @@ const styles = StyleSheet.create({
   loaderSize: { width: 100, height: 100 },
   background: {
     flexGrow: 1,
-    backgroundColor: BACKGROUND_COLOR,
     overflow: 'hidden',
   },
 });
